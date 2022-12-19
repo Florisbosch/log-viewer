@@ -89,7 +89,7 @@ class LogViewerService
     {
         $rootFolder = Str::of(config('log-viewer.filesystem.root'));
 
-        return ($rootFolder != "")
+        return ($rootFolder != '')
             ? $rootFolder->finish('/')
             : $rootFolder;
     }

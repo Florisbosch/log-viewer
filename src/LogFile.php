@@ -38,10 +38,10 @@ class LogFile
         $this->subFolder = str_replace($this->name, '', $path);
         $this->subFolder = rtrim($this->subFolder, DIRECTORY_SEPARATOR);
 
-        if (str_starts_with($path, DIRECTORY_SEPARATOR)) {
-            $this->absolutePath = pathinfo($path)['dirname'];
-            $this->path = pathinfo($path)['basename'];
-        }
+//        if (str_starts_with($path, DIRECTORY_SEPARATOR)) {
+//            $this->absolutePath = pathinfo($path)['dirname'];
+//            $this->path = pathinfo($path)['basename'];
+//        }
 
         $this->loadMetadata();
     }

@@ -54,7 +54,7 @@ class LogFile
 
     public function size(): int
     {
-        return 0; //LogViewer::getFilesystem()->size($this->path);
+        return LogViewer::getFilesystem()->exists($this->path) ? LogViewer::getFilesystem()->size($this->path) : 0;
     }
 
     public function sizeInMB(): float

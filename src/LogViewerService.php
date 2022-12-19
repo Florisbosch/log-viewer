@@ -65,13 +65,13 @@ class LogViewerService
         $files = [];
 
         if (! $absolute) {
-            $scannedFiles = $this->getFilesystem()->allFiles($this->basePathForLogs());
+            $scannedFiles = $this->getFilesystem()->files($this->basePathForLogs());
         } else {
             $pathInfo = pathinfo($pattern);
             $dirname = $pathInfo['dirname'];
             $pattern = $pathInfo['basename'];
 
-            $scannedFiles = $this->getFilesystem($dirname)->allFiles();
+            $scannedFiles = $this->getFilesystem($dirname)->files();
         }
 
         foreach ($scannedFiles as $file) {

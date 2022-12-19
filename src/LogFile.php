@@ -16,10 +16,15 @@ class LogFile
     use Concerns\LogFile\CanCacheData;
 
     public string $path;
+
     public string $name;
+
     public string $identifier;
+
     public string $absolutePath = '';
+
     public string $subFolder = '';
+
     private array $_logIndexCache;
 
     public function __construct(string $path)

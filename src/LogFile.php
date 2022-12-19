@@ -147,7 +147,9 @@ class LogFile
     public function delete(): void
     {
         $this->clearCache();
-        LogViewer::getFilesystem($this->absolutePath)->delete($this->path);
+        if (LogViewer::getFilesystem($this->absolutePath)->exists($this->path)) {
+            LogViewer::getFilesystem($this->absolutePath)->delete($this->path);
+        }
         LogFileDeleted::dispatch($this);
     }
 }

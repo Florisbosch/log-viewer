@@ -64,7 +64,7 @@ class LogViewerService
     {
         $files = [];
 
-        if (!$absolute) {
+        if (! $absolute) {
             $scannedFiles = $this->getFilesystem()->allFiles($this->basePathForLogs());
         } else {
             $pathInfo = pathinfo($pattern);
@@ -74,11 +74,10 @@ class LogViewerService
             $scannedFiles = $this->getFilesystem($dirname)->allFiles();
         }
 
-        foreach($scannedFiles as $file)
-        {
+        foreach ($scannedFiles as $file) {
             if (preg_match(pattern: Glob::toRegex(glob: $pattern), subject: $file)) {
                 $files[] = isset($dirname)
-                    ? $dirname . DIRECTORY_SEPARATOR . $file
+                    ? $dirname.DIRECTORY_SEPARATOR.$file
                     : $file;
             }
         }
@@ -89,6 +88,7 @@ class LogViewerService
     public function basePathForLogs(): string
     {
         $rootFolder = Str::of(config('log-viewer.filesystem.root'));
+
         return empty($rootFolder)
             ? $rootFolder->finish('/')
             : $rootFolder;
@@ -171,7 +171,7 @@ class LogViewerService
 
     public function getFilesystem($absolutePath = ''): Filesystem
     {
-        if (!config('disable_absolute_filepaths') && ($absolutePath !== '') && is_dir($absolutePath)) {
+        if (! config('disable_absolute_filepaths') && ($absolutePath !== '') && is_dir($absolutePath)) {
             config()->set('filesystems.disks.log-viewer-absolute', [
                 'driver' => 'local',
                 'root' => $absolutePath,

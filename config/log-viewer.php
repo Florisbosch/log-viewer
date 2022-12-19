@@ -66,8 +66,10 @@ return [
     |--------------------------------------------------------------------------
     |
     */
+    'disable_absolute_filepaths' => env('LOG_VIEWER_DISABLE_ABSOLUTE_FILEPATHS',  false),
+
     'filesystem' => [
-        'root' => env('LOG_VIEWER_FILESYSTEM_ROOT', ''),
+        'root' => env('LOG_VIEWER_FILESYSTEM_ROOT',''),
         'disk' => env('LOG_VIEWER_FILESYSTEM_DISK', 'log-viewer-local'),
     ],
 

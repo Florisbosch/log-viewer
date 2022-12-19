@@ -8,6 +8,7 @@ use Opcodes\LogViewer\Events\LogFileDeleted;
 use Opcodes\LogViewer\Exceptions\InvalidRegularExpression;
 use Opcodes\LogViewer\Facades\LogViewer;
 use Opcodes\LogViewer\Utils\Utils;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LogFile
@@ -16,24 +17,27 @@ class LogFile
     use Concerns\LogFile\CanCacheData;
 
     public string $path;
-
     public string $name;
-
     public string $identifier;
-
+    public string $absolutePath = '';
     public string $subFolder = '';
-
     private array $_logIndexCache;
 
     public function __construct(string $path)
     {
+        $pathInfo = pathinfo($path);
         $this->path = $path;
-        $this->name = basename($path);
+        $this->name = $pathInfo['basename'];
         $this->identifier = Str::substr(md5($path), -8, 8).'-'.$this->name;
 
         // Let's remove the file name because we already know it.
         $this->subFolder = str_replace($this->name, '', $path);
         $this->subFolder = rtrim($this->subFolder, DIRECTORY_SEPARATOR);
+
+        if (str_starts_with($path, DIRECTORY_SEPARATOR)) {
+            $this->absolutePath = pathinfo($path)['dirname'];
+            $this->path         = pathinfo($path)['basename'];
+        }
 
         $this->loadMetadata();
     }
@@ -54,9 +58,7 @@ class LogFile
 
     public function size(): int
     {
-        return LogViewer::getFilesystem()->exists($this->path)
-            ? LogViewer::getFilesystem()->size($this->path)
-            : 0;
+        return LogViewer::getFilesystem($this->absolutePath)->size($this->path);
     }
 
     public function sizeInMB(): float
@@ -81,7 +83,7 @@ class LogFile
 
     public function download(): StreamedResponse
     {
-        return LogViewer::getFilesystem()->download($this->path);
+        return LogViewer::getFilesystem($this->absolutePath)->download($this->path);
     }
 
     public function addRelatedIndex(LogIndex $logIndex): void
@@ -109,15 +111,13 @@ class LogFile
     public function earliestTimestamp(): int
     {
         return $this->getMetadata('earliest_timestamp')
-            ?? 0;
-//            ?? LogViewer::getFilesystem()->exists($this->path) ? LogViewer::getFilesystem()->lastModified($this->path) : 0;
+            ?? LogViewer::getFilesystem($this->absolutePath)->lastModified($this->path);
     }
 
     public function latestTimestamp(): int
     {
         return $this->getMetadata('latest_timestamp')
-            ?? 0;
-//            ?? LogViewer::getFilesystem()->exists($this->path) ? LogViewer::getFilesystem()->lastModified($this->path) : 0;
+            ?? LogViewer::getFilesystem($this->absolutePath)->lastModified($this->path);
     }
 
     public function scan(int $maxBytesToScan = null, bool $force = false): void
@@ -141,7 +141,7 @@ class LogFile
     public function delete(): void
     {
         $this->clearCache();
-        LogViewer::getFilesystem()->delete($this->path);
+        LogViewer::getFilesystem($this->absolutePath)->delete($this->path);
         LogFileDeleted::dispatch($this);
     }
 }

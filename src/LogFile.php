@@ -107,13 +107,15 @@ class LogFile
     public function earliestTimestamp(): int
     {
         return $this->getMetadata('earliest_timestamp')
-            ?? LogViewer::getFilesystem()->exists($this->path) ? LogViewer::getFilesystem()->lastModified($this->path) : 0;
+            ?? 0;
+//            ?? LogViewer::getFilesystem()->exists($this->path) ? LogViewer::getFilesystem()->lastModified($this->path) : 0;
     }
 
     public function latestTimestamp(): int
     {
         return $this->getMetadata('latest_timestamp')
-            ?? LogViewer::getFilesystem()->exists($this->path) ? LogViewer::getFilesystem()->lastModified($this->path) : 0;
+            ?? 0;
+//            ?? LogViewer::getFilesystem()->exists($this->path) ? LogViewer::getFilesystem()->lastModified($this->path) : 0;
     }
 
     public function scan(int $maxBytesToScan = null, bool $force = false): void

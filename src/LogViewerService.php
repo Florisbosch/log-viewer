@@ -88,8 +88,8 @@ class LogViewerService
     public function basePathForLogs(): string
     {
         $rootFolder = Str::of(config('log-viewer.filesystem.root'));
-
-        return !empty($rootFolder)
+        
+        return ($rootFolder != "")
             ? $rootFolder->finish('/')
             : $rootFolder;
     }

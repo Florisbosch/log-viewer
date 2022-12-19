@@ -8,7 +8,6 @@ use Opcodes\LogViewer\Events\LogFileDeleted;
 use Opcodes\LogViewer\Exceptions\InvalidRegularExpression;
 use Opcodes\LogViewer\Facades\LogViewer;
 use Opcodes\LogViewer\Utils\Utils;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LogFile
@@ -17,10 +16,15 @@ class LogFile
     use Concerns\LogFile\CanCacheData;
 
     public string $path;
+
     public string $name;
+
     public string $identifier;
+
     public string $absolutePath = '';
+
     public string $subFolder = '';
+
     private array $_logIndexCache;
 
     public function __construct(string $path)
@@ -36,7 +40,7 @@ class LogFile
 
         if (str_starts_with($path, DIRECTORY_SEPARATOR)) {
             $this->absolutePath = pathinfo($path)['dirname'];
-            $this->path         = pathinfo($path)['basename'];
+            $this->path = pathinfo($path)['basename'];
         }
 
         $this->loadMetadata();

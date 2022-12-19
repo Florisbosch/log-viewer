@@ -29,7 +29,7 @@ class LogViewerService
         $baseDir = str_replace(
             ['[', ']'],
             ['{LEFTBRACKET}', '{RIGHTBRACKET}'],
-            str_replace('\\', '/', $this->basePathForLogs()),
+            $this->basePathForLogs(),
         );
         $baseDir = str_replace(
             ['{LEFTBRACKET}', '{RIGHTBRACKET}', '\\'],

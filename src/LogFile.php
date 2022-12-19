@@ -51,7 +51,9 @@ class LogFile
 
     public function size(): int
     {
-        return LogViewer::getFilesystem()->size($this->path);
+        return LogViewer::getFilesystem()->exists()
+            ? LogViewer::getFilesystem()->size($this->path)
+            : 0;
     }
 
     public function sizeInMB(): float
@@ -104,13 +106,13 @@ class LogFile
     public function earliestTimestamp(): int
     {
         return $this->getMetadata('earliest_timestamp')
-            ?? LogViewer::getFilesystem()->lastModified($this->path);
+            ??  LogViewer::getFilesystem()->exists($this->path) ? LogViewer::getFilesystem()->lastModified($this->path) : 0;
     }
 
     public function latestTimestamp(): int
     {
         return $this->getMetadata('latest_timestamp')
-            ?? LogViewer::getFilesystem()->lastModified($this->path);
+            ??  LogViewer::getFilesystem()->exists($this->path) ? LogViewer::getFilesystem()->lastModified($this->path) : 0;
     }
 
     public function scan(int $maxBytesToScan = null, bool $force = false): void
